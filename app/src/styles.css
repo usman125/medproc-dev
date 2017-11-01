@@ -1,0 +1,56 @@
+/* You can add global styles to this file, and also import other style files */
+h1,h2,h3,h4,h5,h6{
+	margin-top: 0; 
+}
+.modal-backdrop{
+  z-index: 0;
+}
+.prequaliform .form-group:before {
+    content: "\e661";
+    font-family: "themify";
+    position: absolute;
+    left: 14px;
+    color: #DD0330;
+}
+
+.prequaliform .form-group {
+    margin-left: 20px;
+    border-bottom: 1px dotted #ccc;
+}
+
+.prequaliform .form-group input {
+    border: 1px solid #CCC5B9;
+}
+
+.prequaliform .form-group label {
+    color: #000;
+}
+.help-block{
+  text-align: right;
+  font-size: 12px;
+}
+.card { overflow: hidden; }
+.table-responsive { overflow-x: scroll; }
+.busy-container {
+    /*background: #DD0330;*/
+    text-align: center;
+    top:0;
+    color: #000;
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    position: absolute;
+    background-color: rgba(255,255,255,0.7);
+
+}
+
+.busy-container .busy-msg {
+    padding: 15px;
+    position: absolute;
+    top: 50%;
+    right: 50%;
+}
+
+.user-container .card{
+    overflow: visible !important;
+}

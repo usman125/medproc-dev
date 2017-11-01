@@ -1,0 +1,80 @@
+<div class="container-fluid">
+    <div class="col-md-">
+        <div class="row">
+            <div class="card">
+<!--                 <div class="header" *ngIf="selectedTender == null">
+                    <h4 class="title">No Tender Selected</h4>
+                    <p class="category"><span><strong>Tender Name:&nbsp;</strong></span></p>
+                </div> -->
+                <div [ngBusy]="busyA"></div>
+                <div class="header" *ngIf="selectedTender != null">
+                    <h3 class="title">Tender Demands <a routerLink="/pcohome" class="pull-right btn btn-fill btn-danger"><i class="ti-angle-left"></i>&nbsp;Back</a></h3>
+                    <!-- <p class="category"><span><strong>Tender Name:&nbsp;</strong>{{selectedTender?.name}}</span></p> -->
+                    <p class="category">All Demands on this tender</p>
+                </div>
+                <div class="content table-responsive table-full-width">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="col-md-6">
+                        <label class="control-label">Search</label>
+                        <div class="input-group border-input form-group">
+                          <div class="input-group-addon"><span class="ti-search"></span></div>
+                          <input class="form-control border-input" [(ngModel)]="filterQuery" placeholder="Search"/>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label" for="options">Filter Options:</label>
+                            <select [ngModel]="filterOption" (ngModelChange)="changeFilter($event)" class="border-input form-control" id="options">
+                              <option selected="selected" value="name" >Name</option>
+                              <option value="mediunit" >Unit</option>
+                              <option value="medisize" >Size</option>
+                              <option value="meditype" >Type</option>
+                              <option value="quantity">Quantity</option>
+                              <option value="sgtdquantity" >Suggested Quantity</option>
+                              <!-- <option value="advertisementdate" >Advertisement Date</option> -->
+                              <!-- <option value="department">Department</option> -->
+                            </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>                  
+                  <table class="table table-hover" *ngIf="selectedTender != null">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Unit</th>
+                        <th>Type</th>
+                        <th>Size</th>
+                        <th>Quantity</th>
+                        <th>Suggested Quantity</th>
+                        <!-- <th>North Vendor</th>
+                        <th>South Vendor</th>
+                        <th>Central Vendor</th>
+                        <th>North Bid</th>
+                        <th>South Bid</th>
+                        <th>Central Bid</th> -->
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let medicine of tenderMedi | medicineFilter:filterQuery:filterOption;">
+                        <td>{{medicine.name}}</td>
+                        <td>{{medicine.mediunit}}</td>
+                        <td>{{medicine.meditype}}</td>
+                        <td>{{medicine.medisize}}</td>
+                        <td>{{medicine.quantity}}</td>
+                        <td>{{medicine.sgtdquantity}}</td>
+                        <!-- <td>{{medicine.northvendorname}}</td>
+                        <td>{{medicine.southvendorname}}</td>
+                        <td>{{medicine.centralvendorname}}</td>
+                        <td>{{medicine.northbid}}</td>
+                        <td>{{medicine.southbid}}</td>
+                        <td>{{medicine.centralbid}}</td> -->
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+            </div>            
+        </div>  
+    </div>
+</div>

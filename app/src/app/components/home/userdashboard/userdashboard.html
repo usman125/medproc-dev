@@ -1,0 +1,87 @@
+<div class="container-fluid">  
+  <div class="row">
+
+    <div class="col-md-4">
+      <div class="card">
+        <div class="header">
+          <h4 class="title">Select a tender to view your demands</h4>
+        </div>
+        <br>
+        <div [ngBusy]="busyTenders"></div>
+        <ul class="list-group">
+          <li [ngClass]="{'active': selectedIndex == i, 'list-group-item': true}" *ngFor="let tender of allTenders; let i=index;" (click)="addActive(i, tender);">{{tender.name}}<i class="ti-angle-right pull-right"></i></li>
+          <!-- <li class="list-group-item"><a routerLink="/demands">more</a><i class="ti-angle-right pull-right"></i></li> -->
+        </ul>
+        <div class="content">
+            <div class="footer pull-right">
+                <div class="chart-legend">
+                    <a class="btn-addpro" routerLink="/demands"><i class="ti-more text-info"></i>&nbsp;more</a>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card">
+            <div class="header" *ngIf="selectedTender == null">
+                <h4 class="title">No Tender Selected</h4>
+            </div>
+            <div class="header" *ngIf="selectedTender != null">
+                <h4 class="title">{{selectedTender?.name}}</h4>
+                <p class="category">All medicine demands on this tender</p>
+            </div>
+            <div [ngBusy]="busyChart"></div>
+            <div class="content">
+                <div id="chartActivity" class="ct-chart"></div>
+                <!-- <button *ngIf="selectedTender != null" (click)="showCompleteDemands(selectedTender._id)" class="pull-right btn-addpro btn btn-fill btn-info"><i class="ti-more"></i> more</button> -->
+                <div class="footer pull-right">
+                    <div class="chart-legend">
+                        <span *ngIf="selectedTender != null" (click)="showCompleteDemands(selectedTender._id)"><a class="btn-addpro"><i class="ti-more"></i> more</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+
+</div>
+<div class="row">
+    <div class="col-md-4">
+      <div class="card">
+        <div class="header">
+          <h4 class="title">Tender purchase orders</h4>
+          <p class="category">Select a purchase order to view demands</p>
+        </div>
+        <div class="header" *ngIf="selectedTender == null">
+            <h5 class="title">No Tender Selected</h5>
+        </div>        
+        <div class="header" *ngIf="allTenderPos.length == 0">
+            <h6 class="title">No Purchase Orders</h6>
+        </div>
+        <br>
+
+        <!-- <div [ngBusy]="busyPo"></div> -->
+        <ul class="list-group">
+          <li [ngClass]="{'active': selectedPoIndex == i, 'list-group-item': true}" *ngFor="let po of allTenderPos; let i=index;" (click)="addPoActive(i, po);">{{po.ponumber}}<i class="ti-angle-right pull-right"></i></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card">
+            <div class="header" *ngIf="selectedPo == null">
+                <h4 class="title">No Po Selected</h4>
+            </div>
+            <div class="header" *ngIf="selectedPo != null">
+                <h4 class="title">{{selectedPo?.ponumber}}</h4>
+                <p class="category">All ordered medicines on this purchase order</p>
+            </div>
+            <!-- <div [ngBusy]="busyChart"></div> -->
+            <div class="content">
+                <div id="poChartActivity" class="ct-chart"></div>
+            </div>
+        </div>
+    </div>
+
+  </div>
+</div>

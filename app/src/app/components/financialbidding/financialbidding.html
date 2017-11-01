@@ -1,0 +1,82 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card">
+        <div class="header">
+          <h2 class="title">Financial Bidding</h2>
+        </div>
+        <div class="content">
+          <form (ngSubmit)="selectTender(selectTenderForm.value)" [formGroup]="selectTenderForm">
+            <div class="form-group">
+              <label class="control-label" for="tender">Select Tender</label>
+              <select class="border-input form-control" id="tender" [formControl]="selectTenderForm.controls['tender']" formControlName="tender">
+                <option value="" selected="selected">Select Tender</option>
+                <option [ngValue]="tender" *ngFor="let tender of allTenders">{{tender.name}}</option>
+              </select>
+            </div>
+            <div class="form-group">
+                <button type="submit" [disabled]="!selectTenderForm.valid || disableTenderBtn" class="btn btn-success btn-fill" name="selecttender">&nbsp;Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>      
+    </div>
+    <div class="col-md-8">
+      <div class="card">
+        <div class="header">
+          <h2 *ngIf="!medicineView" class="title">Listing  <button routerLink="/passedbids" class="btn btn-fill btn-info pull-right"><i class="ti-check"></i> Passed Bids</button></h2>
+          <p *ngIf="!medicineView" class="category">list of all vendors for financial bidding</p>
+          <h2 *ngIf="medicineView" class="title">Vendor<button class="btn btn-fill btn-danger pull-right" (click)="closeMedView()"><i class="ti-angle-left"></i> Back</button></h2>
+          <p *ngIf="medicineView" class="category"><strong>{{selectedVendorName}}</strong></p>
+        </div>  
+        <div class="content table-responsive table-full-width">
+          <table *ngIf="!medicineView" class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Vendor</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let qv of qualifiedVendors; let i=index">
+                <td *ngIf="isEmergency">{{qv.name}}</td>
+                <td *ngIf="!isEmergency">{{qv.vendorname}}</td>
+                <td *ngIf="isEmergency">
+                  <span *ngIf="vendorEditShow(qv._id)" class="ti-pencil" (click)="vendorSelect(qv._id,qv.name,i)"></span>
+                </td>
+                <td *ngIf="!isEmergency">
+                  <span *ngIf="vendorEditShow(qv.vendorId)" class="ti-pencil" (click)="vendorSelect(qv.vendorId,qv.vendorname,i)"></span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <table *ngIf="medicineView" class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Medicine</th>
+                <th>Unit</th>
+                <th>Type</th>
+                <th>North Bid</th>
+                <th>South Bid</th>
+                <th>Central Bid</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let medicine of uniqueMedicines; let i=index">
+                <td>{{medicine.name}}</td>
+                <td>{{medicine.mediunit}}</td>
+                <td>{{medicine.meditype}}</td>
+                <td><input *ngIf="medicine.northzone" [ngModel]="medicine.northbid" (ngModelChange)="northBidChange(i,$event,medicine._id)" type="number" /></td>
+                <td><input *ngIf="medicine.southzone" [ngModel]="medicine.southbid" (ngModelChange)="southBidChange(i,$event,medicine._id)" type="number" /></td>
+                <td><input *ngIf="medicine.centralzone" [ngModel]="medicine.centralbid" (ngModelChange)="centralBidChange(i,$event,medicine._id)" type="number" /></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="form-group">
+            <button *ngIf="medicineView" class="btn-addpro btn btn-success btn-fill" (click)="addFinancialBid()"><i class="ti-check"></i>Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

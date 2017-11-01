@@ -1,0 +1,41 @@
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+    	  <!-- <div [ngBusy]="[busyDems, busyDemsb]"></div> -->
+        <div class="header">
+          <h2 class="title">Tender<button class="btn btn-fill btn-danger pull-right" (click)="goBack()"><i class="ti-angle-left"></i> Back </button></h2>
+          <p class="category"><strong><span>Name:</span>&nbsp;{{tender.name}}</strong></p>
+          <p class="category">Demands from Department(s)</p>
+        </div>
+        <div class="content table-responsive table-full-width">
+          <table class="table table-striped table-hover">
+			<thead>
+			  <tr>
+			  	<th>Demands</th>
+			    <th>Department</th>
+			    <th>No. of Medicines</th>
+			    <th>Estimated Cost</th>
+			    <th>Actions</th>
+			  </tr>
+			</thead>
+			<tbody>
+			  <tr *ngFor="let dep of tender.department; let i=index">
+			  	<td><span *ngIf="tender.islocked !== '1'"><input type="checkbox" class="form-control input-checkbox" [ngModel]="demStatus[i]" (ngModelChange)="acceptOrReject(demStatus[i],i)" /></span>
+			  	<span class="input-text" *ngIf="demStatus[i]">Accepted</span>
+			  	<span class="input-text" *ngIf="!demStatus[i]">Pending</span></td>
+			    <td>{{dep.name}}</td>
+			    <td>{{medCount[i]}}</td>
+			    <td>{{medPrice[i]}}</td>
+			    <td><a routerLink="/tenders/{{tender._id}}/departments/{{dep._id}}">
+			    	View District Demands
+			    </a></td>
+			  </tr>
+			</tbody>
+			</table>
+        </div>
+      </div>
+    </div>
+    </div>
+    </div>

@@ -1,0 +1,128 @@
+<div class="container-fluid">
+  <div *ngIf="!createPoView" class="po-action-btn col-md-12">
+  		<button (click)="createPo()" class="btn btn-info btn-fill"><i class="ti-plus"></i> Create New</button>
+  	</div>
+  <div *ngIf="!createPoView" class="row">
+  <div class="col-md-12" *ngFor="let order of allPurchaseOrders;let i=index">
+      <div class="card"> 
+      	<div class="header">
+      		<h3 class="title"> {{i+1}} # {{order.ponumber}} <button class="btn btn-fill btn-info pull-right" (click)="printPo(order._id)"><i class="ti-printer"></i>&nbsp;&nbsp;Print</button></h3>
+          <p class="category"><strong><span>Tender Name:</span>{{order.tendername}}</strong></p>
+          <p class="category"><strong><span>Vendor Name:</span>{{order.vendorname}}</strong></p>
+          <p class="category"><strong><span>Lead Time:</span>{{order.leadtime}} Days</strong></p>
+      		<button *ngIf="showCauseNotice[i]" class="btn btn-danger btn-fill mb10">Show Cause Notice</button>
+        </div>
+        <div class="content table-responsive table-full-width">
+        	<table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Size</th>
+                <th>Dosage</th>
+                <th>Remaining Quantity</th>
+                <th>Demanded Quantity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let medicine of order.medicine">
+                <td>{{medicine.name}}</td>
+                <td>{{medicine.medisize}}</td>
+                <td>{{medicine.dosage}}</td>
+                <td>{{medicine.quantity}}</td>
+                <td>{{medicine.demandedquantity}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    </div>
+  <div *ngIf="createPoView" class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="header">
+          <h2 class="title">Purchase Order
+            <button *ngIf="createPoView" (click)="backToPo()" class="btn btn-danger btn-fill pull-right"><i class="ti-angle-left"></i> Back</button>
+          </h2>
+        </div>
+        <div class="content">
+          <form (ngSubmit)="selectTender(selectTenderForm.value)" [formGroup]="selectTenderForm">
+            <div class="form-group">
+              <label class="control-label" for="tender">Select Tender</label>
+              <select class="border-input form-control" id="tender" [formControl]="selectTenderForm.controls['tender']" formControlName="tender">
+                <option value="" selected="selected">Select Tender</option>
+                <option [ngValue]="tender" *ngFor="let tender of allTenders">{{tender.name}}</option>
+              </select>
+            </div>
+            <div class="form-group">
+                <button type="submit" [disabled]="!selectTenderForm.valid" class="btn btn-success btn-fill" name="selecttender">&nbsp;Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>      
+    </div>
+    <div *ngIf="vendorView" class="col-md-12">
+      <div class="card"> 
+      	<div class="header">
+      		<h3> Vendors </h3>
+        </div> 
+        <div class="content table-responsive table-full-width">
+        	<table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let vendor of allVendorsName; let i=index">
+                <td>{{vendor}}</td>
+                <td><span class="ti-pencil" (click)="vendorSelect(i)"></span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="medicineView" class="col-md-12">
+      <div class="card"> 
+      	<div class="header">
+      		<button (click)="backToVendors()" class="btn btn-fill btn-danger pull-right"><i class="ti-angle-left"></i> Back </button>
+      		<h3> {{poNumber}} </h3>
+          <hr>
+      		<input class="form-control border-input" [ngModel]="leadtime" (ngModelChange)="changeLeadTime($event)" type="number" placeholder="Lead Time" />
+        </div> 
+        <div class="content table-responsive table-full-width">
+        	<table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Medicine</th>
+                <th>Unit</th>
+                <th>Size</th>
+                <th>Dosage</th>
+                <th>Total</th>
+                <th>Remaining</th>
+                <th>Quantity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let medicine of poListByVendor; let i=index">
+                <td>{{medicine.name}}</td>
+                <td>{{medicine.mediunit}}</td>
+                <td>{{medicine.medisize}}</td>
+                <td>{{medicine.dosage}}</td>
+                <td>{{medicine.quantity}}</td>
+                <td>{{remainingQuantity[i]}}</td>
+                <td><input [ngModel]="medicine.reqquantity" (ngModelChange)="changeQuantity(i,$event,medicine)" type="number" min="0" max="medicine.quantity" /></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="ml10">
+            <button *ngIf="requestPo" class="btn-addpro btn btn-success btn-fill" (click)="addPurchaseOrder()"><i class="ti-check"></i>Submit</button>
+            <button *ngIf="!requestPo" disabled="true" class="btn-addpro btn btn-success btn-fill"><i class="ti-check"></i>Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

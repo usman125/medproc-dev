@@ -1,0 +1,151 @@
+<div class="container-fluid">
+
+  <div class="row" *ngIf="!showTenderPreQuali && !showQualiProfile && !showEditQualiPro">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="header">
+          <h2 class="title">Tenders</h2>
+          <p class="category">select a tender to pre qualify a vendor</p>
+        </div>
+        <div class="content table-responsive table-full-width">
+          <div class="col-md-12">
+            <div class="col-md-6">
+              <label class="control-label">Search</label>
+              <div class="input-group border-input form-group">
+                <div class="input-group-addon"><span class="ti-search"></span></div>
+                <input class="form-control border-input" [(ngModel)]="filterQuery" placeholder="Search"/>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label class="control-label" for="options">Filter Options:</label>
+                  <select [ngModel]="filterOption" (ngModelChange)="changeFilterTender($event)" class="border-input form-control" id="options">
+                    <option value="name">Name</option>
+                    <option value="fiscalyear">Fiscal Year</option>
+                    <option value="tenderdate">Date</option>
+                  </select>
+              </div>
+            </div>
+          </div>        
+          <table class="table table-striped table-hover" *ngIf="allTenders.length">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Fiscal Year</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let tender of allTenders | tenderFilter:filterQuery:filterOption" (click)="getPreQualiProfile(tender._id)">
+                <td>{{tender.name}}</td>
+                <td>{{tender.fiscalyear}}</td>
+                <td>{{tender.tenderdate | date:'fullDate'}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div> 
+
+  <div class="row" *ngIf="showTenderPreQuali && !showQualiProfile && !showEditQualiPro">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="header">
+          <h3 class="title">Vendors<button (click)="hideTenderPreQuali()" class="btn btn-fill btn-danger btn-fill pull-right"><i class="ti-angle-left"></i> Back</button> </h3>
+          <p class="category">list of all vendor to qualify for </p>
+          <p class="category"><strong>Tender Name - {{selectedTender.name | uppercase}}</strong></p>
+          <p class="category"><strong>Fiscal Year - {{selectedTender.fiscalyear}}</strong></p>
+          <p class="category"><strong>Date - {{selectedTender.tenderdate | date:"fullDate"}}</strong></p>
+        </div>
+        <div class="content table-responsive table-full-width">
+          <div class="col-md-12">
+            <div class="col-md-6">
+              <label class="control-label">Search</label>
+              <div class="input-group border-input form-group">
+                <div class="input-group-addon"><span class="ti-search"></span></div>
+                <input class="form-control border-input" [(ngModel)]="filterQuery" placeholder="Search"/>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label class="control-label" for="options">Filter Options:</label>
+                  <select [ngModel]="filterOption" (ngModelChange)="changeFilter($event)" class="border-input form-control" id="options">
+                    <option value="name">Name</option>
+                    <option value="address">Address</option>
+                    <option value="status">Status</option>
+                  </select>
+              </div>
+            </div>
+          </div>
+          <table class="table table-hover table-striped" *ngIf="allVendors.length">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>City</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let vendor of allVendors | preQualiFilter:filterQuery:filterOption">
+                <td>{{vendor.name}}</td>
+                <td>{{vendor.city}}</td>
+                <td id="pending" *ngIf="vendor.status === 'pending'"><button  (click)="showPreQualiProfile(vendor._id);" class="btn btn-fill btn-info"><i class="ti-more"></i>&nbsp;&nbsp;Pending</button></td>
+                <td id="qualify" *ngIf="vendor.status === 'qualify'"><button (click)="editPreQualiProfile(vendor._id);" class="btn btn-fill btn-success"><i class="ti-medall"></i>&nbsp;Qualify</button></td>
+                <td id="unqualify" *ngIf="vendor.status === 'unqualify'"><button (click)="editPreQualiProfile(vendor._id)" class="btn btn-fill btn-danger"><i class="ti-unlink"></i>&nbsp;Un-qualify</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="showQualiProfile && !showEditQualiPro">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="header">
+          <h3 class="title">Pre Qualify Vendor<button (click)="hideQualiProfile()" class="btn btn-fill btn-danger btn-fill pull-right"><i class="ti-angle-left"></i> Back</button> </h3>
+          <hr>
+          <p class="category"><strong>Name - {{selectedVendor.name}}</strong></p>
+          <p class="category"><strong>Address- {{selectedVendor.address}}</strong></p>
+          <p class="category">mark the following qualification profile</p>
+          <p class="category"><strong>Name - {{preQualiProName}}</strong></p>
+        </div>
+        <hr>
+        <div class="content">
+          <form [formGroup]="formGroup" class="prequaliform">
+            <dynamic-bootstrap-form [group]="formGroup"
+                            [model]="formModel" (change)="formChange($event)">
+            </dynamic-bootstrap-form>
+          </form>
+          <button (click)="saveVendorPreQualiProfile()" [disabled]="!setQualiProFormBtn" class="btn btn-fill btn-success"><i class="ti-check"></i> Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="row" *ngIf="showEditQualiPro">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="header">
+          <h3 class="title">Pre Qualification Profile<button class="btn pull-right btn-danger btn-fill" (click)="hideEditPreQualiModal()"> Close</button></h3>
+          <hr>
+          <p class="category"><strong>Name - {{preQualiProName}}</strong></p>
+          <p class="category">Vendor Marks For this profile</p>
+          <p class="category"><strong>Name - {{selectedVendor.name}}</strong></p>
+          <p class="category"><strong>Address - {{selectedVendor.address}}</strong></p>
+        </div>
+        <hr>
+        <div class="content">
+          <form [formGroup]="editFormGroup" class="prequaliform">
+            <dynamic-bootstrap-form [group]="editFormGroup"
+                        [model]="editFormModel" (change)="editFormChange($event)"></dynamic-bootstrap-form>
+          </form>
+          <button class="btn btn-info btn-fill" [disabled]="!setEditQualiProFormBtn" (click)="updatePreQualiProfile()" type="submit"><i class="ti-check"></i> Update</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

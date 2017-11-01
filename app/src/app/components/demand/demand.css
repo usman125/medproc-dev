@@ -1,0 +1,10 @@
+.sticky-card {
+	position: fixed;
+	width: 25%;
+}
+.inline-block {
+	display: inline-block;;
+}
+.btn-addpro {
+    margin: 0 15px 15px;
+}

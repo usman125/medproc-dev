@@ -1,0 +1,6 @@
+.navbar-inverse .navbar-nav > li > a.active{
+  color:#fff;
+}
+.sidebar-wrapper ul li a:hover {
+    cursor: pointer;
+}

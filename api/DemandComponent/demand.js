@@ -1,0 +1,22 @@
+var controller = require('./demand.ctrl.js')
+
+module.exports = function(router){
+    router.get('/alldemands', controller.alldemands )
+    router.get('/alldemandsbytenderwithstatus', controller.alldemandsbytenderwithstatus )
+    router.get('/demandhistory', controller.demandhistory )
+    router.get('/userdemands', controller.userdemands )
+    router.get('/demand', controller.demand )
+    router.post('/editdemand', controller.editdemand )
+    router.post('/updatedemandstate', controller.updatedemandstate )
+    router.post('/updatetenderdemandstate', controller.updatetenderdemandstate )
+    router.post('/updatedeptdemandstate', controller.updatedeptdemandstate )
+    router.post('/updatedistrictdemandstate', controller.updatedistrictdemandstate )
+    router.get('/departmentdemands', controller.departmentdemands )
+    router.get('/tenderdemands', controller.tenderdemands )
+    router.get('/usertenderdemands', controller.userTenderDemands )
+    router.get('/userfulldemands', controller.userFullDemands )
+    router.get('/dddemands', controller.dddemands )
+    router.get('/alldashboarddemands', controller.allDashboardDemands )
+    router.get('/alluserdashboarddemands', controller.allUserDashboardDemands )
+    router.post('/adddemand', controller.adddemand )
+}

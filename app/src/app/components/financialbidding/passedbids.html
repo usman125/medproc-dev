@@ -1,0 +1,38 @@
+<h1> Passed Bids </h1>
+<div *ngFor="let tender of allTenderMeds">
+	<div class="card">
+	    <div class="header">
+	    	<h2> {{tender.tendername}} </h2>
+	    </div>  
+	    <div class="content table-responsive table-full-width">
+	      <table class="table table-bordered">
+	        <thead>
+	          <tr>
+	          	<th>Medicine Name</th>
+	          	<th>Unit</th>
+	          	<th>Type</th>
+	            <th>North Vendor</th>
+	            <th>South Vendor</th>
+	            <th>Central Vendor</th>
+	            <th>North Bid</th>
+	            <th>South Bid</th>
+	            <th>Central Bid</th>
+	          </tr>
+	        </thead>
+	        <tbody>
+	          <tr *ngFor="let medicine of tender.medicine">
+	            <td>{{medicine.name}}</td>
+	            <td>{{medicine.mediunit}}</td>
+	            <td>{{medicine.meditype}}</td>
+	            <td>{{medicine.northvendorname}}</td>
+	            <td>{{medicine.southvendorname}}</td>
+	            <td>{{medicine.centralvendorname}}</td>
+	            <td>{{medicine.northbid}}</td>
+	            <td>{{medicine.southbid}}</td>
+	            <td>{{medicine.centralbid}}</td>
+	          </tr>
+	        </tbody>
+	      </table>
+	    </div>
+	</div>
+</div>

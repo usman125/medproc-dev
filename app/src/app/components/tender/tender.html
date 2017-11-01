@@ -1,0 +1,244 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12" *ngIf="!tenderFormFlag">
+      <div class="card">
+        <div [ngBusy]="busytenders"></div>
+        <div class="header">
+          <h2 class="title">Tenders<button *ngIf="userRole=='admin'" (click)="showTenderForm()" class="btn btn-info btn-fill pull-right"><i class="ti-plus"></i> Add Tender</button></h2>
+          <p class="category">list of all tenders</p>
+        </div>
+        <div class="content table-responsive table-full-width">
+          <div class="col-md-12">
+            <div class="col-md-6">
+              <label class="control-label">Search</label>
+              <div class="input-group border-input form-group">
+                <div class="input-group-addon"><span class="ti-search"></span></div>
+                <input class="form-control border-input" [(ngModel)]="filterQuery" placeholder="Search"/>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label class="control-label" for="options">Filter Options:</label>
+                  <select [ngModel]="filterOption" (ngModelChange)="changeFilter($event)" class="border-input form-control" id="options">
+                    <option value="name" selected>Name</option>
+                    <option value="fiscalyear" >Fiscal Year</option>
+                    <option value="tenderdate" >Tender Date</option>
+                    <option value="demanddateto" >Demand Date To</option>
+                    <option value="demanddatefrom" >Demand Date From</option>
+                    <option value="advertisementdate" >Advertisement Date</option>
+                    <option value="department" >Department</option>
+                  </select>
+              </div>
+            </div>
+          </div>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th *ngIf="userRole !=='admin'">Demands</th>
+                <th>Name</th>
+                <th>Fiscal Year</th>
+                <th>Tender Date</th>
+                <th>Demand Date To</th>
+                <th>Demand Date From</th>
+                <th>Advertisment Date</th>
+                <th>Department</th>
+                <th *ngIf="userRole == 'admin'">Actions</th>
+                <th *ngIf="userRole !=='admin'">Permanent Actions</th>
+                <th>Quali Profiles</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let tender of allTenders | tenderFilter:filterQuery:filterOption; let i=index">
+                <td *ngIf="userRole !=='admin'"><span *ngIf="userRole==='pco' && tender.islocked !== '1'"><input type="checkbox" class="form-control input-checkbox" [ngModel]="demStatus[i]" (ngModelChange)="acceptOrReject(demStatus[i],i)" /></span>
+                  <button class="btn btn-fill btn-success" disabled="disabled" *ngIf="userRole==='pco' && tender.islocked === '1'"><i class="ti-check"></i>&nbsp;Accepted</button>
+                  <span class="input-text" *ngIf="userRole==='pco' && tender.islocked !== '1' && demStatus[i]">Accepted</span>
+                  <span class="input-text" *ngIf="userRole==='pco' && tender.islocked !== '1' && !demStatus[i]">Pending</span></td>
+                <td>{{tender.name}}</td>
+                <td>{{tender.fiscalyear}}</td>
+                <td>{{tender.tenderdate | date:'fullDate'}}</td>
+                <td>{{tender.demanddateto | date:'fullDate'}}</td>
+                <td>{{tender.demanddatefrom | date:'fullDate'}}</td>
+                <td>{{tender.advdate | date:'fullDate'}}</td>
+                <td>
+                  <span *ngFor="let department of tender.department; let isLast=last">
+                    {{department.name}}{{isLast ? '' : ','}}
+                  </span>
+                </td>
+                <td *ngIf="userRole == 'admin'  && tender.islocked !== '1'" (click)="editTender(tender._id)"><i class="ti-pencil-alt"></i></td>
+                <td *ngIf="userRole == 'admin'  && tender.islocked !== '0'"><i class="ti-na"></i></td>
+                <td *ngIf="userRole !=='admin'">
+                  <a *ngIf="userRole==='pco'" routerLink="/tenders/{{tender._id}}/departments"> View Department Demands </a>
+                </td>
+                <td *ngIf="userRole !=='admin'">
+                  <button *ngIf="userRole==='pco' && tender.islocked !== '1' && demStatus[i]" (click)="lockTender(tender)" class="btn btn-danger btn-fill">Lock Tender</button>
+                  <button *ngIf="userRole==='pco' && tender.islocked === '1'" disabled="disabled" class="btn btn-fill btn-danger"><i class="ti-lock"></i>&nbsp;Locked Tender</button>
+                </td>
+                <td><span *ngIf="tender.prequaliprofile[0] || tender.techqualiprofile[0]">{{tender.prequaliprofile[0].profilename}}, {{tender.techqualiprofile[0].profilename}}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12" *ngIf="tenderFormFlag">
+      <div class="card">
+        <div class="header">
+          <h2 class="title">Add Tender<button (click)="hideTenderForm()" class="btn btn-fill btn-danger pull-right"><i class="ti-angle-left"></i> Back</button></h2>
+          <p class="category">add a new vendor</p>
+        </div>
+        <div class="content">
+        
+          <form (ngSubmit)="addTender(addTenderForm.value, $event)" [formGroup]="addTenderForm">
+            
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="name">Name</label>
+                  <input class="form-control border-input" type="text" id="name" [formControl]="addTenderForm.controls['name']" formControlName="name">   
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="fiscalyear">Fiscal Year</label>
+                  <input class="form-control border-input" type="text" id="fiscalyear" [formControl]="addTenderForm.controls['fiscalyear']" formControlName="fiscalyear">   
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="tenderdate">Tender Date</label>
+                  <input class="form-control border-input" type="date" id="tenderdate" [formControl]="addTenderForm.controls['tenderdate']" formControlName="tenderdate">   
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="demanddateto">Demand Date To</label>
+                  <input class="form-control border-input" type="date" id="demanddateto" [formControl]="addTenderForm.controls['demanddateto']" formControlName="demanddateto"> 
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="demanddatefrom">Demand Date From</label>
+                  <input class="form-control border-input" type="date" id="demanddatefrom" [formControl]="addTenderForm.controls['demanddatefrom']" formControlName="demanddatefrom">   
+                </div>          
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="advdate">Advertisemnet date</label>
+                  <input class="form-control border-input" type="date" id="advdate" [formControl]="addTenderForm.controls['advdate']" formControlName="advdate">   
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="department">Department</label>
+                  <angular2-multiselect [formControl]="addTenderForm.controls['department']" [data]="departmentDropdownList" [(ngModel)]="selectedDepartmentItems" formControlName="department" id="department" [settings]="dropdownSettings" (onSelect)="onItemSelect($event)" (onDeSelect)="OnItemDeSelect($event)"></angular2-multiselect>
+                </div>
+              </div>              
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="from-group">
+                  <!-- <div class="checkbox"> -->
+                    <label><input (change)="setProfilesOption()" value="prequalify" [formControl]="addTenderForm.controls['prequalification']" type="radio" formControlName="prequalification" />Pre Qualification</label>
+                  <!-- </div> -->
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="from-group">
+                  <!-- <div class="checkbox"> -->
+                    <label><input value="emergency" (change)="setProfilesOption()" [formControl]="addTenderForm.controls['prequalification']" type="radio" formControlName="prequalification" />Emergancy Process</label>
+                  <!-- </div> -->
+                </div>
+              </div>  
+            </div>
+
+            <div class="row" *ngIf="addTenderForm.controls['prequalification'].value === 'prequalify'">
+              <div class="col-md-6" *ngIf="addTenderForm.controls['prequalification'].value === 'prequalify'">
+                <div class="form-group">
+                  <label for="prequaliprofile">Select Pre Qualification Profile</label>
+                  <select class="form-control border-input" [formControl]="addTenderForm.controls['prequaliprofile']" formControlName="prequaliprofile" id="prequaliprofile">
+                    <option [ngValue]="profile._id" *ngFor="let profile of preQualiDropdownList">
+                      {{profile.profilename}}
+                    </option>
+                  </select>
+                </div>
+              </div>              
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="techqualiprofile">Select Technical Qualification Profile</label>
+                  <select class="form-control border-input" [formControl]="addTenderForm.controls['techqualiprofile']" formControlName="techqualiprofile" id="techqualiprofile">
+                    <option [ngValue]="profile._id" *ngFor="let profile of techQualiDropdownList">
+                      {{profile.profilename}}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="from-group">
+                  <div class="checkbox">
+                    <label><input [formControl]="addTenderForm.controls['pubinnews']" type="checkbox" formControlName="pubinnews" />Published In News</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="filefornews">Upload Ad</label>
+                  <input id="filefornews" class="form-control border-input" type="file" (change)="fileChangeNews($event)" placeholder="Upload file" accept=".pdf,.doc,.docx" />
+                </div>         
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="from-group">
+                  <div class="checkbox">
+                    <label><input [formControl]="addTenderForm.controls['pubinppra']" type="checkbox" formControlName="pubinppra" />Published In PPRA</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="fileforppra">Tender Document</label>
+                  <input id="fileforppra" class="form-control border-input" type="file" (change)="fileChangeTender($event)" placeholder="Upload file" accept=".pdf,.doc,.docx" />
+                </div>         
+              </div>            
+            </div>
+
+
+
+            <div class="form-group">
+                <button type="submit" [disabled]="!addTenderForm.valid" class="btn btn-success btn-fill" name="addtender"><i class="ti-plus"></i>&nbsp;Add</button>
+            </div>
+
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- <h1>Tenders Called</h1>
+<div *ngFor="let tender of allTenders">
+  <span>{{tender.name}}</span>
+</div> -->

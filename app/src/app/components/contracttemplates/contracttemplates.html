@@ -1,0 +1,86 @@
+<div class="container">
+  
+  <div class="row" *ngIf="addProfileFlag && !singleProfile">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="header">
+          <h2 class="title">Profile Preview</h2>
+          <p class="category">preview of profile to save</p>
+        </div>
+        <div class="content">
+<!--           <form [formGroup]="addProfileForm" (ngSubmit)="addProfile(addProfileForm.value, $event)">
+            <div class="form-group">
+              <label for="profiletext">Enter Profile Text</label>
+              <textarea [froalaEditor]='options' rows="4" cols="50" [(froalaModel)]="profileText" class="form-control border-input" type="textarea" formCotrolName="text" id="profiletext"></textarea>
+            </div>  
+            <button type="submit" class="btn btn-fill btn-info"><i class="ti-check"></i> Save</button>
+          </form> -->
+          <div [froalaView]="profileToSave"></div>
+          <button *ngIf="profileToSave" (click)="saveProfile()" class="btn btn-fill btn-success"><i class="ti-check"></i>&nbsp;Save</button>
+        </div>
+      </div>    
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="header">
+          <h2 class="title">Generate Profile <button (click)="hideAddTemplateForm();" class="btn pull-right btn-fill btn-danger"><i class="ti-angle-left"></i> Back</button></h2>
+          <p class="category">enetr profile text below</p>
+        </div>
+        <div class="content">
+          <form [formGroup]="addProfileForm" (ngSubmit)="addProfile(addProfileForm.value, $event)">
+            <div class="form-group">
+              <label for="name">Enter Profile Name</label>
+              <input class="form-control border-input" placeholder="type something" type="text" id="name" [formControl]="addProfileForm.controls['name']" formControlName="name">  
+            </div>
+            <div class="form-group">
+              <!-- <label for="profiletext">Enter Profile Text</label> -->
+              <textarea [froalaEditor]='options' rows="4" cols="50" [(froalaModel)]="profileText" class="form-control border-input" type="textarea" formCotrolName="text" id="profiletext"></textarea>
+            </div>  
+            <button type="submit" class="btn btn-fill btn-info"><i class="ti-layout-list-post"></i> Generate</button>
+          </form>
+          <!-- <div  []>Hello, Froala!</div> -->
+        </div>
+      </div>    
+    </div>
+  </div>
+
+  <div class="row" *ngIf="!addProfileFlag && !singleProfile">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="header">
+          <h3 class="title">Contract Templates<button (click)="showAddTemplateForm();" class="btn pull-right btn-fill btn-info"><i class="ti-plus"></i> Add Template</button></h3>
+          <p class="category">list of all contract templates</p>
+        </div>
+        <div class="content table-responsive table-full-width">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let template of allTemplates">
+                <td (click)="getSignleTemplate(template._id)">{{template.name}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="row" *ngIf="singleProfile">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="header">
+          <h3 class="title">Contract Template<button (click)="hdieSingleProfile();" class="btn pull-right btn-fill btn-danger"><i class="ti-angle-left"></i> Back</button></h3>
+          <p class="category"><strong>Name - {{selectedTemplateName}}</strong></p>
+        </div>
+        <div class="content">
+          <div [froalaView]="selectedTemplate"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

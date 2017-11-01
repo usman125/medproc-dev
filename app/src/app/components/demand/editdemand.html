@@ -1,0 +1,72 @@
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      	<div class="card">
+	        <div class="header">
+	          <h2 class="title"> User Demand<button class="btn btn-fill btn-danger pull-right inline-block" (click)="goBack()"><i class="ti-angle-left"></i> Back </button></h2>
+						<p class="category"><strong><span>Tender Name:</span>{{demand.tendername}} </strong></p>
+						<p class="category"><strong><span>District Name:</span>{{demand.districtname}} </strong></p>
+						<p class="category"><strong><span>User Name:</span>{{demandUserName}} </strong></p>
+						<p class="category">List of all medicines demanded by user</p>
+	        </div>
+      
+	        <div class="content table-responsive table-full-width">
+          	<table class="table table-striped table-hover">
+							<thead>
+							  <tr>
+							  	<th>Medicine Name</th>
+							  	<th>Medicine Unit</th>
+					  			<th>Medicine Type</th>
+							  	<th>Quantity</th>
+							  	<th>Reason</th>
+							  </tr>
+							</thead>
+							<tbody>
+								<tr *ngFor="let medi of demand.medicine; let i=index">
+									<td> {{medi.name}}</td>
+									<td>{{medi.mediunit}}</td>
+									<td>{{medi.meditype}}</td>
+									<td>{{medi.quantity}} <input *ngIf="!tenderLocked" type="text" [ngModel]="quantity[i]" (ngModelChange)="changeQuantity(i,$event,medi)" /></td>
+									<td>{{medi.reason}} <input *ngIf="!tenderLocked" type="text" [ngModel]="reason[i]" (ngModelChange)="changeReason(i,$event,medi)" /></td>
+								</tr>
+							</tbody>
+						</table>
+						<button *ngIf="isValid && !tenderLocked" (click)="editDemand()" class="btn btn-addpro btn-info btn-fill"><i class="ti-pencil-alt"></i>Edit</button>
+	        </div>
+        </div>
+    </div>
+  </div>
+   	<div class="row">
+    	<div class="col-md-12">
+    
+      		<div class="card">
+		        <div class="header">
+		          <h1 class="inline-block"> Demand History </h1>
+		        </div>
+      
+	        <div class="content table-responsive table-full-width">
+	          	<table *ngFor="let demand of demandHistory" class="table table-striped table-hover">
+					<thead>
+					  <tr>
+					  	<th>Medicine Name</th>
+					  	<th>Medicine Unit</th>
+					  	<th>Medicine Type</th>
+					  	<th>Quantity</th>
+					  	<th>Reason</th>
+					  </tr>
+					</thead>
+					<tbody>
+						<tr *ngFor="let medi of demand.medicine; let i=index">
+							<td>{{medi.name}}</td>
+							<td>{{medi.mediunit}}</td>
+							<td>{{medi.meditype}}</td>
+							<td>{{medi.quantity}}</td>
+							<td>{{medi.reason}}</td>
+						</tr>
+					</tbody>
+				</table>
+	        </div>
+        </div>
+    </div>
+</div>

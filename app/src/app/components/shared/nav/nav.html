@@ -1,0 +1,191 @@
+<!-- <nav class="navbar navbar-inverse navbar-fixed-top" *ngIf="showNavBar">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#/home">MedProc</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a routerLink="/home" routerLinkActive="active"><i class="ti-user"></i>Users</a></li>
+        <li><a routerLink="/vendors" routerLinkActive="active">Vendors</a></li>
+        <li><a routerLink="/tenders" routerLinkActive="active">Tenders</a></li>
+        <li><a routerLink="/medicines" routerLinkActive="active">Medicines</a></li>
+        <li><a routerLink="/configs" routerLinkActive="active">Configurations</a></li>
+        <li><a routerLink="/demands" routerLinkActive="active">Demands</a></li>
+        <li><a routerLink="/prequalification" routerLinkActive="active">Pre Qualification</a></li>
+        <li><a routerLink="/techqualification" routerLinkActive="active">Tech Qualification</a></li>
+        <li><a (click)="logout()"><span class="glyphicon glyphicon-log-out"></span>&nbsp;&nbsp;Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</nav> 
+<div class="sidebar-wrapper" *ngIf="showNavBar" >
+    <div class="logo">
+      <a routerLink="/home" class="simple-text">
+          <!-- <div class="logo-img">
+              <img src="../../assets/img/angular2-logo.png" alt="">
+          </div> 
+          <strong>Med</strong>Proc
+      </a>
+    </div>
+    <ul class="nav" *ngIf="userRole === 'admin'">
+      <li routerLinkActive="active">
+        <a routerLink="/home">
+          <i class="ti-user"></i>
+          <p>Users</p>
+        </a>
+      </li>
+      <li routerLinkActive="active">
+        <a routerLink="/vendors">
+          <i class="ti-briefcase"></i>
+          <p>Vendors</p>
+        </a>
+      </li>
+      <li routerLinkActive="active">
+        <a routerLink="/tenders">
+          <i class="ti-files"></i>
+          <p>Tenders</p>
+        </a>
+      </li>
+      <li routerLinkActive="active">
+        <a routerLink="/medicines">
+          <i class="ti-paint-bucket"></i>
+          <p>Medicines</p>
+        </a>
+      </li>
+      <li routerLinkActive="active">
+        <a routerLink="/configs">
+          <i class="ti-settings"></i>
+          <p>Configurations</p>
+        </a>
+      </li>
+
+      <li>
+        <a (click)="logout()">
+          <i class="ti-shift-left"></i>
+          <p>Logout</p>
+        </a>
+      </li>
+    </ul>
+
+    <ul class="nav"  *ngIf="userRole === 'deo'">
+      
+      <li routerLinkActive="active">
+        <a routerLink="/contracttemplates">
+          <i class="ti-layout-list-post"></i>
+          <p>Contract Templates</p>
+        </a>
+      </li>
+      <li routerLinkActive="active">
+        <a routerLink="/prequalification">
+          <i class="ti-folder"></i>
+          <p>Pre Qualification Profiles</p>
+        </a>
+      </li>
+
+      <li routerLinkActive="active">
+        <a routerLink="/techqualification">
+          <i class="ti-folder"></i>
+          <p>Tech Qualification Profiles</p>
+        </a>
+      </li>      
+      
+      <li>
+        <a (click)="logout()">
+          <i class="ti-shift-left"></i>
+          <p>Logout</p>
+        </a>
+      </li>
+
+    </ul>
+
+    <ul class="nav" *ngIf="userRole === 'pco'">
+      <li routerLinkActive="active">
+        <a routerLink="/tenders">
+          <i class="ti-files"></i>
+          <p>Tenders</p>
+        </a>
+      </li>
+      <li routerLinkActive="active">
+        <a routerLink="/financialbidding">
+          <i class="ti-files"></i>
+          <p>Financial Bidding</p>
+        </a>
+      </li>
+      <li routerLinkActive="active">
+        <a routerLink="/contracts">
+          <i class="ti-files"></i>
+          <p>Contract</p>
+        </a>
+      </li>
+
+      <li routerLinkActive="active">
+        <a routerLink="/vendorprequali">
+          <i class="ti-folder"></i>
+          <p>Vendor Pre Qualification</p>
+        </a>
+      </li>
+      <li routerLinkActive="active">
+        <a routerLink="/vendortechquali">
+          <i class="ti-folder"></i>
+          <p>Vendor Technical Qualification</p>
+        </a>
+      </li>
+      <li>
+        <a (click)="logout()">
+          <i class="ti-shift-left"></i>
+          <p>Logout</p>
+        </a>
+      </li>
+    </ul>  
+
+    <ul class="nav"  *ngIf="userRole === 'user'">
+      <li routerLinkActive="active">
+        <a routerLink="/demands">
+          <i class="ti-files"></i>
+          <p>Demands</p>
+        </a>
+      </li>
+
+    
+
+      <li>
+        <a (click)="logout()">
+          <i class="ti-shift-left"></i>
+          <p>Logout</p>
+        </a>
+      </li>
+    </ul> 
+     
+</div>
+-->
+
+<div class="sidebar-wrapper" *ngIf="showNavBar" >
+  <div class="logo">
+    <a class="simple-text">
+       <div class="logo-img">
+            <img src="../../assets/img/angular2-logo.png" alt="">
+        </div> 
+        <strong>Med</strong>Proc
+    </a>
+  </div>
+  <ul class="nav">
+    <li *ngFor="let nav of roleBasedNav" routerLinkActive="active">
+      <a *ngIf="nav.role===userRole && nav.name!=='Logout'" routerLink="/{{nav.route}}">
+        <i [ngClass]="nav.icon"></i>
+        <p>{{nav.name}}</p>
+      </a>
+      <a *ngIf="nav.role===userRole && nav.name==='Logout'" (click)="logout()">
+        <i [ngClass]="nav.icon"></i>
+        <p>{{nav.name}}</p>
+      </a>
+    </li>
+  </ul>
+</div>
+
+

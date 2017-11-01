@@ -1,0 +1,32 @@
+{
+  "name": "pitb-eprocurement",
+  "version": "0.0.1-alpha",
+  "description": "PITB-eProcurement is an free online rest client",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "PITB-eProcurement",
+    "imixtron",
+    "tallymarks"
+  ],
+  "author": "imixtron",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "body-parser": "^1.17.2",
+    "connect-multiparty": "^2.0.0",
+    "cors": "^2.8.4",
+    "express": "^4.15.3",
+    "express-fileupload": "^0.1.4",
+    "express-mongo-busboy": "^3.0.0",
+    "formidable": "^1.1.1",
+    "html-pdf": "^2.1.0",
+    "jsonwebtoken": "^7.4.1",
+    "mongoose": "^4.10.3",
+    "mongoose-gridfs": "^0.2.0",
+    "multer": "^1.3.0",
+    "stream": "0.0.2"
+  }
+}

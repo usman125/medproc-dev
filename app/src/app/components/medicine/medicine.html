@@ -1,0 +1,186 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12" *ngIf="!medicineFormFlag">
+      <div class="card">
+        <div [ngBusy]="busyMeds"></div>
+        <div class="header">
+          <h2 class="title">Medicines<button (click)="showMedicineForm()" class="btn btn-info btn-fill pull-right"><i class="ti-plus"></i> Add Medicine</button></h2>
+          <p class="category">list of all medicines</p>
+        </div>
+        <div class="content table-responsive table-full-width">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="col-md-6">
+                <label class="control-label">Search</label>
+                <div class="input-group border-input form-group">
+                  <div class="input-group-addon"><span class="ti-search"></span></div>
+                  <input class="form-control border-input" [(ngModel)]="filterQuery" placeholder="Search"/>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label" for="options">Filter Options:</label>
+                    <select [ngModel]="filterOption" (ngModelChange)="changeFilter($event)" class="border-input form-control" id="options">
+                      <option selected="selected" value="name" >Name</option>
+                      <option value="mediunit" >Unit</option>
+                      <option value="medisize" >Size</option>
+                      <option value="meditype" >Type</option>
+                      <option value="sgtdquantity" >Suggested Quantity</option>
+                      <!-- <option value="advertisementdate" >Advertisement Date</option> -->
+                      <option value="estprice" >Estimated Price</option>
+                      <option value="department">Department</option>
+                    </select>
+                </div>
+              </div>
+            </div>
+          </div>  
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Unit</th>
+                <th>Size</th>
+                <th>Type</th>
+                <th>Dosage</th>
+                <th>Suggested Quantity</th>
+                <th>Genre</th>
+                <th>Estd Price</th>
+                <th>Department</th>
+                <th>Attachment Ref.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let medicine of allMedicines | medicineFilter:filterQuery:filterOption;">
+                <td>{{medicine.name}}</td>
+                <td>{{medicine.mediunit}}</td>
+                <td>{{medicine.medisize}}</td>
+                <td>{{medicine.meditype}}</td>
+                <td>{{medicine.dosage}}</td>
+                <td>{{medicine.sgtdquantity}}</td>
+                <td>{{medicine.medigenre}}</td>
+                <td>{{medicine.estprice}}</td>
+                <td>{{medicine.department[0].name}}</td>
+                <td><span *ngIf="medicine.filereference">/uploads/</span>{{medicine.filereference}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12" *ngIf="medicineFormFlag">
+      <div class="card">
+        <div class="header">
+          <h2 class="title">Add Medicine<button (click)="hideMedicineForm()" class="btn btn-fill btn-danger pull-right"><span class="ti-angle-left"></span> Back</button></h2>
+        </div>
+        <div class="content">
+          <form (ngSubmit)="addMedicine(addMedicineForm.value, $event)" [formGroup]="addMedicineForm" enctype="multipart/form-data">
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="name">Name</label>
+                  <input class="form-control border-input" type="text" id="name" [formControl]="addMedicineForm.controls['name']" formControlName="name">   
+                </div>
+              </div> 
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Department</label>
+                  <select class="form-control border-input" formControlName="department">
+                    <option value="">Select Department</option>
+                    <option *ngFor="let dep of allDepartments" [value]="dep._id">{{dep.name}}</option>
+                  </select>
+                </div>
+              </div> 
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="mediunit">Unit</label>
+                  <!-- <input class="form-control border-input" type="text" id="mediunit" [formControl]="addMedicineForm.controls['mediunit']" formControlName="mediunit">  --> 
+                  <select class="form-control border-input" id="mediunit" [formControl]="addMedicineForm.controls['mediunit']" formControlName="mediunit">
+                    <option value="">Select Unit</option>
+                    <option *ngFor="let unit of allMediUnits" [value]="unit.name">{{unit.name}}</option>
+                  </select> 
+                </div>
+              </div> 
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="medisize">Size</label>
+<!--                   <input class="form-control border-input" type="text" id="medisize" [formControl]="addMedicineForm.controls['medisize']" formControlName="medisize"> --> 
+                  <select class="form-control border-input" id="medisize" [formControl]="addMedicineForm.controls['medisize']" formControlName="medisize">
+                      <option value="">Select Size</option>
+                      <option *ngFor="let size of allMediSize" [value]="size.name">{{size.name}}</option>
+                  </select>   
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="meditype">Type</label>
+                  <!-- <input class="form-control border-input" type="text" id="meditype" [formControl]="addMedicineForm.controls['meditype']" formControlName="meditype"> --> 
+                  <select class="form-control border-input" id="meditype" [formControl]="addMedicineForm.controls['meditype']" formControlName="meditype">
+                      <option value="">Select Type</option>
+                      <option *ngFor="let type of allMediTypes" [value]="type.name">{{type.name}}</option>
+                  </select>  
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="sgtdquantity">Suggested Quantity</label>
+                  <input class="form-control border-input" type="text" id="sgtdquantity" [formControl]="addMedicineForm.controls['sgtdquantity']" formControlName="sgtdquantity">   
+                </div>
+              </div>  
+            </div>
+
+            <!-- <div class="row"> -->
+<!--               <div class="col-md-6">
+                <div class="form-group">
+                  <label for="medigenre">Genre</label>
+                  <input class="form-control border-input" type="text" id="medigenre" [formControl]="addMedicineForm.controls['medigenre']" formControlName="medigenre">   
+                </div>          
+              </div>  --> 
+            <!-- </div> -->
+
+            <!-- <div class="row"> -->
+<!--               <div class="col-md-6">
+                <div class="form-group">
+                  <label for="dosage">Dosage</label>
+                  <input class="form-control border-input" type="text" id="dosage" [formControl]="addMedicineForm.controls['dosage']" formControlName="dosage">   
+                </div>
+              </div>  -->
+              
+            <!-- </div> -->
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="estprice">Medicine Estimated Price</label>
+                  <input class="form-control border-input" type="text" id="estprice" [formControl]="addMedicineForm.controls['estprice']" formControlName="estprice">   
+                </div>
+              </div>  
+<!--               <div class="col-md-6">
+                <div class="form-group">
+                  <label for="chemicalname">Medicine Chemical Name</label>
+                  <input class="form-control border-input" type="text" id="chemicalname" [formControl]="addMedicineForm.controls['chemicalname']" formControlName="chemicalname">   
+                </div>
+              </div> -->
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Upload File (optional)</label>
+                  <input class="form-control border-input" type="file" (change)="fileChange($event)" placeholder="Upload file" accept=".pdf,.doc,.docx" />
+                </div>         
+              </div>
+            </div>
+
+            <div class="form-group">
+              <button type="submit" [disabled]="!addMedicineForm.valid && !imageUploading" class="btn btn-success btn-fill" name="addmedicine"><i class="ti-plus"></i>&nbsp;Add</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

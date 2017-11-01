@@ -1,0 +1,136 @@
+<!-- <h2>Contracts Page</h2> -->
+<div class="container-fluid">
+  <div class="row" *ngIf="!showVendorFlag && !showContractFlag">
+    <div class="col-md-12">
+      <div class="card">
+        <div [ngBusy]="[busyTenders, busyContractTemplate, busyVendorContract]"></div>
+        <div class="header">
+          <h3 class="title">Tenders</h3>
+          <p class="category">list of all tenders for contract</p>
+        </div>
+        <div class="content table-responsive table-full-width">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Fiscal Year</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let tender of allTenders">
+                <td>{{tender.name}}</td>
+                <td>{{tender.fiscalyear}}</td>
+                <td *ngIf="tender.closestatus === 'pending'" (click)="selectVendor(tender._id);"><button class="btn btn-fill btn-info"><i class="ti-more"></i>&nbsp;&nbsp;Pending</button></td>
+                <td *ngIf="tender.closestatus === 'closed'" (click)="selectVendor(tender._id);"><button class="btn btn-fill btn-danger"><i class="ti-na"></i>&nbsp;Closed Tender</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="showVendorFlag && !showContractFlag">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="header">
+          <h3 class="title">Vendors<button (click)="hideVendor()" class="btn btn-fill btn-danger pull-right"><i class="ti-angle-left"></i> Back</button></h3>
+          <p class="category">list of all vendors for contract</p>
+          <p class="category"><strong>Name - {{selectedTender.name}}</strong></p>
+          <p class="category"><strong>Fiscal Year - {{selectedTender.fiscalyear}}</strong></p>
+        </div>
+        <button *ngIf="tenderCloseFlag && selectedTender.closestatus !== 'closed' " (click)="closeTender(selectedTender._id);" class="btn-addpro btn btn-fill btn-info"><i class="ti-na"></i>&nbsp;Close Tender</button>
+        <div class="content table-responsive table-full-width">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let vendor of allVendors">
+                <td>{{vendor.name}}</td>
+                <td>{{vendor.address}}</td>
+                <!-- <td (click)="selectContract(vendor._id)">View Contact</td> -->
+                <td *ngIf="vendor.status === 'preview'" (click)="selectContract(vendor._id)">View Contact</td>
+                <td *ngIf="vendor.status === 'pending'" (click)="selectContract(vendor._id)">Pending</td>
+
+              </tr>
+            </tbody>
+          </table>
+        </div>
+<!--         <button *ngIf="tenderCloseFlag" (click)="closeTender(selectedTender._id);" class="btn-addpro btn btn-fill btn-danger"><i class="ti-na"></i>&nbsp;Close Tender</button> -->
+      </div>
+    </div>
+  </div> 
+  <div class="row" *ngIf="showContractFlag">
+    <hr>
+    <div class="col-md-12">
+      <div class="card">
+        <div class="header">
+          <h3 class="title">Contract<button (click)="hideContractFlag()" class="btn btn-fill btn-danger pull-right"><i class="ti-angle-left"></i> Back</button></h3>
+          <p class="category">below is the contract between vendor and department</p>
+          <hr>
+          <div class="row">
+            <div class="col-md-6">
+              <p class="category"><strong>Tender Details</strong></p>
+              <p class="category"><strong>Name - {{selectedTender.name}}</strong></p>
+              <p class="category"><strong>Fiscal Year - {{selectedTender.fiscalyear}}</strong></p>
+              <p class="category"><strong>Date - {{selectedTender.tenderdate | date:'fullDate'}}</strong></p>
+            </div>
+            <div class="col-md-6">
+              <p class="category"><strong>Vendor Details</strong></p>
+              <p class="category"><strong>Name - {{selectedVendor.name}}</strong></p>
+              <p class="category"><strong>Address - {{selectedVendor.address}}</strong></p>
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="content">
+          <div *ngIf="!existFlag">
+            <div class="form-group">
+              <label for="templates">Select a contract Template</label>
+              <select id=templates class="form-control border-input" [ngModel]="contractTemplate" (ngModelChange)="generateTemplate($event)">
+                <option value="" selected="selected">Select Template</option>
+                <option [value]="template._id" *ngFor="let template of allContractTemplates">{{template.name}}</option>
+              </select>
+            </div>
+            <div class="header">
+              <h4 class="title" *ngIf="contractInfo">Details<button (click)="addVendorContract()" class="btn pull-right btn-fill btn-info" *ngIf="contractInfo"><i class="ti-save"></i>&nbsp;Publish</button></h4>
+            </div>
+            <hr *ngIf="contractInfo">
+            <div [froalaView]="contractInfo"></div>
+          </div>
+          <button class="btn btn-fill btn-info" (click)="viewVendorContract()" *ngIf="existFlag && !viewContractFlag"><i class="ti-search"></i>&nbsp;View Contract</button>
+          <button *ngIf="viewContractFlag" (click)="hideVendorContract()" class="btn btn-fill btn-danger">
+            <i class="ti-na"></i> Hide Contract
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="viewContractFlag">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="header">
+          <h3 class="title">Vendors
+            <a target="_BLANK" href="http://localhost:8008/vendorcontracts/{{selectedVendor._id}}{{selectedTender._id}}.pdf" class="btn btn-fill btn-info pull-right">
+              <i class="ti-printer"></i> Print
+            </a>
+          </h3>
+          <p class="category">below is the agreed contract</p>
+        </div>
+        <!-- <hr> -->
+        <div class="content">
+          <h3 class="title">Details</h3>
+          <!-- <hr> -->
+          <div [froalaView]="viewContract.contractprofiletext"></div>
+        </div>
+      </div>
+    </div>
+  </div> 
+
+</div>

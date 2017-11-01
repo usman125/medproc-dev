@@ -1,0 +1,91 @@
+<div class="container-fluid">
+  <div class="row" *ngIf="!statBlock">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="header">
+          <h3 class="title">Black list vendor</h3>
+          <p class="category">List of all requested blacklist vendors</p>
+        </div>
+        <div class="content teble-responsive table-full-width">
+          <div class="input-group border-input form-group">
+            <div class="input-group-addon"><span class="ti-search"></span></div>
+            <input class="form-control border-input" [(ngModel)]="filterQuery" placeholder="Filter By Name"/>
+          </div>
+          <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let vendor of allVendors | dataFilter:filterQuery">
+                <td>{{vendor.name}}</td>
+                <td>{{vendor.address}}</td>
+                <td *ngIf="vendor.bliststatus === 'pending'" (click)="getVendorStats(vendor._id);" ><button class="btn btn-fill btn-info"><i class="ti-more"></i>&nbsp;&nbsp;Pending</button></td>                
+                <td *ngIf="vendor.bliststatus === 'blacklisted'" (click)="getVendorStats(vendor._id);" ><button class="btn btn-fill btn-danger"><i class="ti-unlink"></i>&nbsp;&nbsp;Blacklisted</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="statBlock">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="header">
+          <h3 class="title">Approve Blacklist <button (click)="hideStatBlock();" class="btn btn-danger btn-fill pull-right"><i class="ti-angle-left"></i>&nbsp;&nbsp;Back</button></h3>
+          <hr>
+          <p class="category"><strong>Vendor Name:</strong><span>&nbsp;{{selectedVendor.name}}</span></p>
+          <p *ngIf="selectedVendor.is_active === false" class="category"><strong>Re-instate Time:</strong><span>&nbsp;{{selectedVendor.is_qualified | date:'fullDate'}}</span></p>
+        </div>
+        <div class="content">
+          
+          <accordion>
+<!--             <accordion-group heading="Static Header, initially expanded">
+              This content is straight in the template.
+            </accordion-group> -->
+            <accordion-group #group>
+              <div accordion-heading>
+                <div><span class="title">{{requestUsers.length}} -</span> Users Requested To black this vendor
+                <i class="pull-right float-xs-right glyphicon"
+                   [ngClass]="{'ti-angle-down': group?.isOpen, 'ti-angle-right': !group?.isOpen}"></i></div>
+              </div>
+              <ol type="1">
+                <li *ngFor="let user of requestUsers">{{user.name}}</li>
+              </ol>  
+            </accordion-group>
+            <accordion-group #group2>
+              <div accordion-heading>
+                <div>Contracts Info
+                <i class="pull-right float-xs-right glyphicon"
+                   [ngClass]="{'ti-angle-down': group2?.isOpen, 'ti-angle-right': !group2?.isOpen}"></i></div>
+              </div>
+              <p>Vendor has contracted in <strong>{{vendorContracts}}</strong> tenders.</p>
+            </accordion-group>
+            <accordion-group #group3>
+              <div accordion-heading>
+                <div>Previously Blacklised
+                <i class="pull-right float-xs-right glyphicon"
+                   [ngClass]="{'ti-angle-down': group3?.isOpen, 'ti-angle-right': !group3?.isOpen}"></i></div>
+              </div>
+              <p>Previous Blacklist Count: <strong>{{vendorBlacklistCount}}</strong></p>
+            </accordion-group>
+          </accordion>
+          <div class="form-group" *ngIf="selectedVendor.is_active === true">
+            <label for="date">Duration to balcklist the vendor</label>
+            <input class="form-control border-input" type="date" [(ngModel)]="datoToBlacklist" name="date" id="date" />
+          </div>
+          <div class="form-group">
+            <button *ngIf="selectedVendor.is_active === true" (click)="approveBlacklist(selectedVendor._id);" class="btn btn-success btn-fill"><i class="ti-unlink"></i>&nbsp;&nbsp;Approve</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+

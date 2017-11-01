@@ -1,0 +1,17 @@
+
+td#pending, 
+td#qualify, 
+td#unqualify {
+    font-weight: 600;
+    text-transform: uppercase;
+}
+td#pending {
+    color: #000;
+}
+td#qualify {
+    color: green;
+}
+td#unqualify {
+    color:red;
+}
+

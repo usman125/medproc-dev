@@ -1,0 +1,155 @@
+<div class="container-fluid user-container">
+	<div class="row">
+    <div class="col-md-12" *ngIf="!userFormFlag">
+    <div class="card">
+      <div class="header">
+      <h3 class="title">Users<button (click)="showUserForm()" class="btn btn-fill btn-info pull-right"><i class="ti-plus"></i> Add User</button></h3>
+      <p class="category">
+        list of all users
+      </p>
+      </div>
+      <div class="content table-responsive table-full-width">
+<!--         <div class="col-md-12">
+          <input class="form-control border-input" placeholder="Enter Keyword" type="text" name="query" [(ngModel)]="filterQuery">
+        </div> -->
+        <div class="col-md-12">
+            <div class="col-md-6">
+              <label class="control-label">Search</label>
+              <div class="input-group border-input form-group">
+                <div class="input-group-addon"><span class="ti-search"></span></div>
+                <input class="form-control border-input" [(ngModel)]="filterQuery" placeholder="Search"/>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label class="control-label" for="options">Filter Options:</label>
+                  <select [ngModel]="filterOption" (ngModelChange)="changeFilter($event)" class="border-input form-control" id="options">
+                    <option value="username">Username</option>
+                    <option value="email">Email</option>
+                    <option value="role">Role</option>
+                  </select>
+              </div>
+            </div>
+          </div>
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of allUsers | dataFilter:filterQuery:filterOption">
+              <td>{{user.username}}</td>
+              <td>{{user.email}}</td>
+              <td>{{user.role}}</td>
+              <td><i (click)="editUser(user._id);" class="ti-pencil-alt"></i></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  	</div>
+    <div class="col-md-12" *ngIf="userFormFlag">
+    <div class="card">
+      <div class="header">
+      	<h3 class="title">Add User<button (click)="hideUserForm()" class="btn btn-fill btn-danger pull-right"><i class="ti-angle-left"></i> Back</button></h3>
+        <p class="category">add a new user</p>
+      </div>
+      <div class="content">
+        
+      <form class="adduser-form" (ngSubmit)="addUser(addUserForm.value, $event)" [formGroup]="addUserForm">
+      <div class="row">
+        <div class="col-md-6">
+          
+        <div class="form-group" [ngClass]="{'has-error':!addUserForm.controls['name'].valid && addUserForm.controls['name'].touched}">
+          <label class="control-label" for="adduser-name">Name</label>
+          <input type="text" class="form-control border-input" [formControl]="addUserForm.controls['name']" formControlName="name" placeholder="Enter Name" id="adduser-name" required/>
+          <div class="alert alert-danger require-field" role="alert" *ngIf="addUserForm.controls['name'].hasError('required') && (addUserForm.controls['name'].touched || addUserForm.controls['name'].dirty)"><span class="glyphicon glyphicon-info-sign"></span> This is Required Field</div>
+          <div class="alert alert-danger require-field" role="alert" *ngIf="addUserForm.controls['name'].hasError('minlength')"><span class="glyphicon glyphicon-info-sign"></span> Length must be 3!</div>
+        </div>
+        </div>
+        <div class="col-md-6">
+        <div class="form-group" [ngClass]="{'has-error':!addUserForm.controls['email'].valid && addUserForm.controls['email'].touched}">
+          <label class="control-label" for="adduser-email">Email</label>
+          <input [formControl]="addUserForm.controls['email']" formControlName="email" class="form-control border-input" id="adduser-email" placeholder="Enter Email" type="text" name="adduser-email" required/>
+          <div class="alert alert-danger require-field" role="alert" *ngIf="addUserForm.controls['email'].hasError('required') && (addUserForm.controls['email'].touched || addUserForm.controls['email'].dirty)"><span class="glyphicon glyphicon-info-sign"></span> This is Required Field</div>
+        </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          
+        <div class="form-group" [ngClass]="{'has-error':!addUserForm.controls['username'].valid && addUserForm.controls['username'].touched}">
+          <label class="control-label" for="adduser-username">Username</label>
+          <input [formControl]="addUserForm.controls['username']" formControlName="username" class="form-control border-input" id="adduser-username" placeholder="Enter Username" type="text" required/>
+          <div class="alert alert-danger require-field" role="alert" *ngIf="addUserForm.controls['username'].hasError('required') && (addUserForm.controls['username'].touched || addUserForm.controls['username'].dirty)"><span class="glyphicon glyphicon-info-sign"></span> This is Required Field</div>
+        </div>
+        </div>
+        <div class="col-md-6">
+          
+        <div class="form-group" [ngClass]="{'has-error':!addUserForm.controls['password'].valid && addUserForm.controls['password'].touched}">
+          <label class="control-label" for="adduser-password">Password</label>
+          <input [formControl]="addUserForm.controls['password']" formControlName="password" class="form-control border-input" id="adduser-password" placeholder="Enter Password" type="password" required/>
+          <div class="alert alert-danger require-field" role="alert" *ngIf="addUserForm.controls['password'].hasError('required') && (addUserForm.controls['password'].touched || addUserForm.controls['password'].dirty)"><span class="glyphicon glyphicon-info-sign"></span> This is Required Field</div>
+        </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          
+        <div class="form-group" [ngClass]="{'has-error':!addUserForm.controls['designation'].valid && addUserForm.controls['designation'].touched}">
+          <label class="control-label" for="adduser-designation">Designation</label>
+          <input [formControl]="addUserForm.controls['designation']" formControlName="designation" class="form-control border-input" id="adduser-designation" placeholder="Enter Designation" type="text" required/>
+          <div class="alert alert-danger require-field" role="alert" *ngIf="addUserForm.controls['designation'].hasError('required') && (addUserForm.controls['designation'].touched || addUserForm.controls['designation'].dirty)"><span class="glyphicon glyphicon-info-sign"></span> This is Required Field</div>
+        </div>
+        </div>
+        <div class="col-md-6">
+          
+        <div class="form-group" [ngClass]="{'has-error':!addUserForm.controls['role'].valid && addUserForm.controls['role'].touched}">
+          <label class="control-label" for="adduser-role">Role</label>
+<!--           <input [formControl]="addUserForm.controls['role']" formControlName="role" class="form-control border-input" id="adduser-role" placeholder="Enter Role" type="text" required/> -->
+          <angular2-multiselect [formControl]="addUserForm.controls['role']" [data]="roleDropdownList" [(ngModel)]="selectedRoleItems" formControlName="role" id="adduser-role" [settings]="RoleDropdownSettings"></angular2-multiselect>
+          <div class="alert alert-danger require-field" role="alert" *ngIf="addUserForm.controls['role'].hasError('required') && (addUserForm.controls['role'].touched || addUserForm.controls['role'].dirty)"><span class="glyphicon glyphicon-info-sign"></span> This is Required Field</div>
+        </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group" [ngClass]="{'has-error':!addUserForm.controls['department'].valid && addUserForm.controls['department'].touched}">
+            <label class="control-label" for="adduser-department">Department</label>
+            <!-- <input [formControl]="addUserForm.controls['department']" formControlName="department" class="form-control border-input" id="adduser-department" placeholder="Enter Departments" type="text" required/> -->
+            <angular2-multiselect [formControl]="addUserForm.controls['department']" [data]="departmentDropdownList" [(ngModel)]="selectedDepartmentItems" formControlName="department" id="adduser-department" [settings]="DepartmentDropdownSettings"></angular2-multiselect>
+            <div class="alert alert-danger require-field" role="alert" *ngIf="addUserForm.controls['department'].hasError('required') && (addUserForm.controls['department'].touched || addUserForm.controls['department'].dirty)"><span class="glyphicon glyphicon-info-sign"></span> This is Required Field</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group" [ngClass]="{'has-error':!addUserForm.controls['district'].valid && addUserForm.controls['district'].touched}">
+            <label class="control-label" for="adduser-district">District</label>
+<!--             <input (ngModelChange)="DistrictChange($event);" [formControl]="addUserForm.controls['district']" formControlName="district" class="form-control border-input" id="adduser-district" placeholder="Enter District" type="text" required/> -->
+            <angular2-multiselect (onSelect)="onItemSelect($event)" [formControl]="addUserForm.controls['district']" [data]="districtDropdownList" [(ngModel)]="selectedDistrictItems" formControlName="district" id="adduser-district" [settings]="DistrictDropdownSettings"></angular2-multiselect>
+            <div class="alert alert-danger require-field" role="alert" *ngIf="addUserForm.controls['district'].hasError('required') && (addUserForm.controls['district'].touched || addUserForm.controls['district'].dirty)"><span class="glyphicon glyphicon-info-sign"></span> This is Required Field</div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          
+        <div class="form-group" [ngClass]="{'has-error':!addUserForm.controls['tehsil'].valid && addUserForm.controls['tehsil'].touched}">
+          <label class="control-label" for="adduser-tehsil">Tehsil</label>
+          <!-- <input [formControl]="addUserForm.controls['tehsil']" formControlName="tehsil" class="form-control border-input" id="adduser-tehsil" placeholder="Enter Tehsil" type="text" required/> -->
+          <angular2-multiselect [formControl]="addUserForm.controls['tehsil']" [data]="tehsilDropdownList" [(ngModel)]="selectedTehsilItems" formControlName="tehsil" id="adduser-tehsil" [settings]="TehsilDropdownSettings"></angular2-multiselect>
+          <div class="alert alert-danger require-field" role="alert" *ngIf="addUserForm.controls['tehsil'].hasError('required') && (addUserForm.controls['tehsil'].touched || addUserForm.controls['tehsil'].dirty)"><span class="glyphicon glyphicon-info-sign"></span> This is Required Field</div>
+        </div>
+        </div>    
+      </div>
+        <button type="submit" class="btn btn-success btn-fill" name="addproduct" [disabled]="(!addUserForm.valid)"><i class="ti-plus"></i>&nbsp;&nbsp;Add</button>
+      </form>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,125 @@
+<div class="container-fluid">
+  <div class="row" *ngIf="!addTechProfileFlag && !singleProfileFlag">
+    <div class="col-md-12">
+      <div class="card">
+        
+        <div class="header">
+          <h3 class="title">Technical-Qualification Profiles<button (click)="showTechQualiForm()" class="btn btn-info btn-fill pull-right"><i class="ti-plus"></i> Add Profile</button></h3>
+        </div>
+        <div class="content teble-responsive table-full-width">
+          <table class="table table-borderd table-hover">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>No of Questions</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="allProfiles.length > 0">
+              <tr *ngFor="let profile of allProfiles" (click)="getSingleProfile(profile._id);" >
+                <td>{{profile.profilename}}</td>
+                <td>{{profile.profileschema.length}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="addTechProfileFlag && !singleProfileFlag">
+    <div class="col-md-12">
+      <div class="card">
+        
+        <div class="header">
+          <h3 class="title">Add Technical-Qualification Profile<button (click)="hideTechQualiForm()" class="btn btn-danger btn-fill pull-right"><i class="ti-angle-left"></i> Back</button></h3>
+        </div>
+        <div class="content">
+          <div class="form-group">
+            <label for="proname">1. Add Profile Name</label>
+            <input class="form-control border-input" value="{{profileName}}" (ngModelChange)="setbutton($event)" [ngModel]="profileName" placeholder="Enter Profile Name" type="text" id="proname" [disabled]="criteriaProfileName!=null"/>
+          </div>   
+          <hr>     
+          <form [formGroup]="addCriteriaForm" (ngSubmit)="addCriteria(addCriteriaForm.value, $event)">
+            <div class="form-group">
+              <label for="name">2. Criteria Question</label>
+              <input class="form-control border-input" placeholder="Enter Criteria" type="text" id="name" [formControl]="addCriteriaForm.controls['name']" formControlName="name">
+            </div>
+            <div class="form-group">
+              <label>3. Criteria Type</label>
+              <select [formControl]="addCriteriaForm.controls['type']" class="form-control border-input">
+                <option value="1">KnockDown</option>
+                <option value="2">Weitage</option>
+              </select>
+            </div>
+            <div class="form-group" *ngIf="addCriteriaForm.controls['type'].value == 2">
+              <label for="totalmarks">Total Marks</label>
+              <input class="form-control border-input" placeholder="Enter Total Marks" type="text" id="totalmarks" [formControl]="addCriteriaForm.controls['totalmarks']" formControlName="totalmarks">
+            </div>
+            <div class="form-group" *ngIf="addCriteriaForm.controls['type'].value == 2">
+              <label for="passingmarks">Passing Marks</label>
+              <input class="form-control border-input" placeholder="Enter Total Marks" type="text" id="passingmarks" [formControl]="addCriteriaForm.controls['passingmarks']" formControlName="passingmarks">
+            </div>
+            <button class="btn btn-info btn-fill" [disabled]="!addCriteriaForm.valid || profileName == null" type="submit">
+            <span class="ti-plus"></span>Add Criteria</button>
+          </form>
+          <hr>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="addTechProfileFlag && !singleProfileFlag">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="content table-responsive table-full-width">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Total Marks</th>
+                <th>Passing Marks</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let criteria of json">
+                <td>{{criteria.label}}</td>
+                <td>{{criteria.criteriatype}}</td>
+                <td>{{criteria.totalmarks}}</td>
+                <td>{{criteria.passingmarks}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <button class="btn btn-addpro btn-fill btn-success" [disabled]="json.length == 0" (click)="addTechQualiProfile()"><i class="ti-check"></i>Save</button>
+        </div>  
+      </div>
+    </div>     
+  </div>
+  <div class="row" *ngIf="singleProfileFlag">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="header">
+          <h3 class="title">{{singleProfile.profilename}}<button (click)="hideSingleProfile()" class="btn btn-danger pull-right btn-fill"><i class="ti-angle-left"></i> Back</button></h3>
+        </div>
+        <div class="content">
+          <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Total Marks</th>
+                <th>Passing Marks</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let profile of singleProfile.profileschema">
+                <td>{{profile.label}}</td>
+                <td>{{profile.criteriatype}}</td>
+                <td>{{profile.totalmarks}}</td>
+                <td>{{profile.passingmarks}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>  
+</div>

@@ -1,0 +1,145 @@
+<div class="container-fluid">
+  <div class="row" *ngIf="!demandFormFlag && !singleDemandFlag">
+    <div class="col-md-12">
+      <div class="card">
+        <div [ngBusy]="busyDemand"></div>
+        <div class="header">
+          <h2 class="title">All Demands<button (click)="showDemandForm()" class="btn btn-info btn-fill pull-right"><i class="ti-plus"></i> Add Demand</button></h2>
+        </div>  
+        <div class="content table-responsive table-full-width">
+          <div class="col-md-12">
+            <div class="col-md-6">
+              <label class="control-label">Search</label>
+              <div class="input-group border-input form-group">
+                <div class="input-group-addon"><span class="ti-search"></span></div>
+                <input class="form-control border-input" [(ngModel)]="filterQuery" placeholder="Search"/>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label class="control-label" for="options">Filter Options:</label>
+                  <select [ngModel]="filterOption" (ngModelChange)="changeFilter($event)" class="border-input form-control" id="options">
+                    <option value="year" selected>Year</option>
+                    <option value="tendername" >Tender</option>
+                    <option value="districtname" >District</option>
+                  </select>
+              </div>
+            </div>
+          </div>
+          <table class="table table-stripped table-hover">
+            <thead>
+              <tr>
+                <th>Year</th>
+                <th>Tender</th>
+                <th>District</th>
+                <th>Demands</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr (click)="getSingleDemand(demand._id)" *ngFor="let demand of allDemands | demandFilter:filterQuery:filterOption">
+                <td>{{demand.year}}</td>
+                <td>{{demand.tendername}}</td>
+                <td>{{demand.districtname}}</td>
+                <td>{{demand.medicine.length}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="singleDemandFlag">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="header">
+          <h3 class="title">Medicines for Demand<button (click)="hideSingleDemand()" class="btn btn-fill btn-danger pull-right"><i class="ti-angle-left"></i> Back</button></h3>
+        </div>
+        <div class="content table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Medicine Name</th>
+<!--                 <th>Unit</th>
+                <th>Type</th> -->
+                <th>Required Quantity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let med of singleDemand.medicine">
+                <td>{{med.name}}</td>
+<!--                 <td>{{med.unit}}</td>
+                <td>{{med.type}}</td> -->
+                <td>{{med.quantity}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="demandFormFlag">
+    <div class="col-md-4">
+      <div class="card sticky-card">
+        <div class="header">
+          <h3 class="title">Add Demand</h3>
+          <p class="category">Select medicine/s and other info to add</p>
+        </div>
+        <div class="content">
+          <form (ngSubmit)="addDemand(addDemandForm.value, $event)" [formGroup]="addDemandForm">
+            <div class="form-group">
+              <label class="control-label" for="tender">Tender</label>
+              <select class="form-control border-input" id="tender" [formControl]="addDemandForm.controls['tender']" formControlName="tender">
+                <option value="">Select Tender</option>
+                <option [ngValue]="tender._id" *ngFor="let tender of allTenders">{{tender.name}}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="control-label" for="year">Year</label>
+              <input type="text" class="form-control border-input" id="year" [formControl]="addDemandForm.controls['year']" formControlName="year">   
+            </div>
+            <div class="form-group">
+              <label class="control-label" for="district">District</label>
+              <!-- <input type="text" class="form-control border-input" id="district" [formControl]="addDemandForm.controls['district']" formControlName="district"> --> 
+              <input type="text" class="form-control border-input" id="district" [formControl]="addDemandForm.controls['district']" value="{{userDistrict}}" formControlName="district"> 
+            </div>
+            <div class="form-group">
+              <button type="submit" [disabled]="!addDemandForm.valid || !selectedMedicines.length || !validateMediInputs()" class="btn btn-fill btn-success" name="adddemand"><i class="ti-plus"></i>&nbsp;Add</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="card">
+        <div class="header">
+          <h3 class="title">Select Medicines<button (click)="hideDemandForm()" class="btn btn-danger btn-fill pull-right"><i class="ti-angle-left"></i> Back</button></h3>
+          <p class="category">list of medicines in your department</p>
+          <p class="category"><strong>Select Medicine/s to demand</strong></p>
+        </div>
+        <div class="content table-responsive table-full-width">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Medicine Name</th>
+                <th width="5%">Unit</th>
+                <th>Type</th>
+                <th>Quantity</th>
+                <th>Reason</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr [ngClass]="{'active': selected[i]==true}" *ngFor="let medicine of allMedicines; let i=index">
+                <td> {{medicine.name}} </td>
+                <td>{{medicine.mediunit}}</td>
+                <td>{{medicine.meditype}}</td>
+                <td><input class="form-control border-input" [ngModel]="quantity[i]" (ngModelChange)="changeQuantity(i,$event,medicine)" type="number"></td>
+                <td><input class="form-control border-input" [ngModel]="reason[i]" (ngModelChange)="changeReason(i,$event,medicine)" type="text"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

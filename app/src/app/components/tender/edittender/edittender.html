@@ -1,0 +1,43 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="header">
+          <h3 class="title">Edit Tender<button (click)="goBack()" class="btn btn-fill btn-danger pull-right"><i class="ti-angle-left"></i> Back</button></h3>
+          <p class="category">
+            Edit the tender info
+          </p>
+        </div>
+        <div class="content">
+          <form (ngSubmit)="editTender(editTenderForm.value)" [formGroup]="editTenderForm">
+            <div class="form-group">
+              <label for="name">Enter Name</label>
+              <input type="text" id="name" class="form-control border-input" placeholder="Enter Name" formControlName="name" [formControl]="editTenderForm.controls['name']">
+            </div>
+<!--             <div class="form-group">
+              <label for="username">Enter Username</label>
+              <input type="text" id="username" class="form-control border-input" placeholder="Enter Username" formControlName="username" [formControl]="editUserForm.controls['username']">
+            </div> -->
+<!--             <div class="form-group">
+              <label for="email">Enter Email</label>
+              <input type="text" id="email" class="form-control border-input" placeholder="Enter Email" formControlName="email" [formControl]="editUserForm.controls['email']">
+            </div>
+            <div class="form-group">
+              <label for="password">Enter Password</label>
+              <input type="password" id="password" class="form-control border-input" placeholder="Enter Password" formControlName="password" [formControl]="editUserForm.controls['password']">
+            </div> -->
+<!--             <div class="form-group">
+              <label for="designation">Enter Designation</label>
+              <input type="text" id="designation" class="form-control border-input" placeholder="Enter designation" formControlName="designation" [formControl]="editUserForm.controls['designation']">
+            </div> -->
+
+            <div class="form-group">
+              <button [disabled]="!editTenderForm.valid" class="btn-addpro btn btn-primary btn-fill" type="submit" name="submit"><i class="ti-check"></i> Update</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

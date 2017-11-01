@@ -1,0 +1,39 @@
+<div class="container-fluid">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="header">
+        <h3 class="title">Black list vendor</h3>
+        <p class="category">List of all vendors</p>
+      </div>
+      <div class="content teble-responsive table-full-width">
+        <!-- <div class="form-group">
+          <input placeholder="Enter any name" type="text" name="filterquery" class="border-input form-control" [(ngModel)]="filterQuery">
+        </div> -->
+        <div class="input-group border-input form-group">
+          <div class="input-group-addon"><span class="ti-search"></span></div>
+          <input class="form-control border-input" [(ngModel)]="filterQuery" placeholder="Filter By Name"/>
+        </div>
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Address</th>
+              <th>City</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let vendor of allVendors | dataFilter:filterQuery">
+              <td>{{vendor.name}}</td>
+              <td>{{vendor.address}}</td>
+              <td>{{vendor.city}}</td>
+              <td *ngIf="vendor.bliststatus === 'Blacklist'" (click)="addBlacklistRequest(vendor._id);">Blacklist</td>
+              <td *ngIf="vendor.bliststatus === 'Requested'">Requested</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
